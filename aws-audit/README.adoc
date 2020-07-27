@@ -1,0 +1,39 @@
+# AWS Audit
+
+A docker container that will run Scoutsuite and Prowler against a target account. This should ensure you are using the latest version of the tools while avoiding dependency hell. This should also get around the GuardDuty finding about using Kali Linux as the container runs Ubuntu.
+
+## Installation
+
+```
+git clone https://github.com/ElliotButler/aws-audit
+cd aws-audit
+sudo docker build -t audit .
+```
+
+## Usage
+
+NOTE: Ensure you have credentials and the target account setup in your `~/.aws/` directory as this is mounted inside the container.
+
+The following command will run the checks and output the reports to the current working directory.
+
+```
+sudo docker run -it -v ~/.aws/:/root/.aws/ -v $(pwd):/output audit <aws profile name>
+```
+
+If you want to run it quickly without remembering to mount the volumes use the following bash alias:
+
+```
+alias aws-audit='sudo docker run -it -v ~/.aws/:/root/.aws/ -v $(pwd):/output audit $1'
+```
+
+Then you can run the following:
+
+```
+aws-audit <aws profile name>
+```
+
+## TODO
+
+* Drop privileges before running the checks
+* Allow credentials to be passed to it rather than relying on config in the ~/.aws direcotry
+* Have an option to run one tool or the other
